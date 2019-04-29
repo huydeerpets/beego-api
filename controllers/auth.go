@@ -33,8 +33,8 @@ func (u *AuthController) Register() {
 	if valid.HasErrors() {
 		for _, err := range valid.Errors {
 			u.Data["json"] = &RespError{
-				Code : paramError,
-				Msg: err.Message,
+				Code: paramError,
+				Msg:  err.Message,
 			}
 			u.ServeJSON()
 		}
@@ -43,8 +43,8 @@ func (u *AuthController) Register() {
 	passwordNew, err := service.AesEncrypt(password)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : encryptError,
-			Msg: err.Error(),
+			Code: encryptError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -53,8 +53,8 @@ func (u *AuthController) Register() {
 	res, err := models.Register(user)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : registerError,
-			Msg: err.Error(),
+			Code: registerError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -67,8 +67,8 @@ func (u *AuthController) Register() {
 		token, err := service.GenToken(userInfo)
 		if err != nil {
 			u.Data["json"] = &RespError{
-				Code : tokenError,
-				Msg: err.Error(),
+				Code: tokenError,
+				Msg:  err.Error(),
 			}
 			u.ServeJSON()
 		}
@@ -101,8 +101,8 @@ func (u *AuthController) Login() {
 	if valid.HasErrors() {
 		for _, err := range valid.Errors {
 			u.Data["json"] = &RespError{
-				Code : paramError,
-				Msg: err.Message,
+				Code: paramError,
+				Msg:  err.Message,
 			}
 			u.ServeJSON()
 		}
@@ -111,8 +111,8 @@ func (u *AuthController) Login() {
 	passwordNew, err := service.AesEncrypt(password)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : encryptError,
-			Msg: err.Error(),
+			Code: encryptError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -121,8 +121,8 @@ func (u *AuthController) Login() {
 	res, err := models.Login(user)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : loginError,
-			Msg: err.Error(),
+			Code: loginError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -136,8 +136,8 @@ func (u *AuthController) Login() {
 		token, err := service.GenToken(userInfo)
 		if err != nil {
 			u.Data["json"] = &RespError{
-				Code : tokenError,
-				Msg: err.Error(),
+				Code: tokenError,
+				Msg:  err.Error(),
 			}
 			u.ServeJSON()
 		}

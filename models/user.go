@@ -23,23 +23,21 @@ func init() {
 }
 
 type User struct {
-	Id       			int64 `json:"id"`
-	Username   			string `json:"username"`
-	Password 			string `json:"password"`
+	Id       int64  `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type TokenInfo struct {
-	Id       	int64 `json:"id"`
-	Username	string `json:"username"`
-	Token		string `json:"token"`
+	Id       int64  `json:"id"`
+	Username string `json:"username"`
+	Token    string `json:"token"`
 }
 
 type UserInfo struct {
-	Id       	int64 `json:"id"`
-	Username   	string `json:"username"`
+	Id       int64  `json:"id"`
+	Username string `json:"username"`
 }
-
-
 
 func Register(User *User) (*User, error) {
 	_, err := db.Insert(User)
@@ -69,4 +67,3 @@ func GetUserInfo(user *User) (*UserInfo, error) {
 
 	return userInfo, nil
 }
-

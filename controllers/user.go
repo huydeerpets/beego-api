@@ -25,8 +25,8 @@ func (u *UserController) Info() {
 	usersJson, err := service.AesDecrypt(claims["sign"].(string))
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : decryptError,
-			Msg: err.Error(),
+			Code: decryptError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -35,8 +35,8 @@ func (u *UserController) Info() {
 	err = json.Unmarshal([]byte(usersJson), &userInfo)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : jsonError,
-			Msg: err.Error(),
+			Code: jsonError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -48,8 +48,8 @@ func (u *UserController) Info() {
 	res, err := models.GetUserInfo(user)
 	if err != nil {
 		u.Data["json"] = &RespError{
-			Code : getUserInfoError,
-			Msg: err.Error(),
+			Code: getUserInfoError,
+			Msg:  err.Error(),
 		}
 		u.ServeJSON()
 	}
@@ -57,4 +57,3 @@ func (u *UserController) Info() {
 	u.Data["json"] = res
 	u.ServeJSON()
 }
-
