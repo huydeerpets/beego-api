@@ -1,86 +1,72 @@
 package models
 
 import (
-	"errors"
-	"strconv"
-	"time"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	UserList map[string]*User
-)
+var db orm.Ormer
+var sqlConn = beego.AppConfig.String("sqlconn")
 
 func init() {
-	UserList = make(map[string]*User)
-	u := User{"user_11111", "astaxie", "11111", Profile{"male", 20, "Singapore", "astaxie@gmail.com"}}
-	UserList["user_11111"] = &u
+	orm.RegisterDriver("mysql", orm.DRMySQL)
+	orm.RegisterDataBase("default", "mysql", sqlConn)
+
+	orm.RegisterModel(new(User))
+
+	orm.Debug = true
+	orm.RunSyncdb("default", false, true)
+
+	db = orm.NewOrm()
+	db.Using("default")
 }
 
 type User struct {
-	Id       string
-	Username string
-	Password string
-	Profile  Profile
+	Id       			int64 `json:"id"`
+	Username   			string `json:"username"`
+	Password 			string `json:"password"`
 }
 
-type Profile struct {
-	Gender  string
-	Age     int
-	Address string
-	Email   string
+type TokenInfo struct {
+	Id       	int64 `json:"id"`
+	Username	string `json:"username"`
+	Token		string `json:"token"`
 }
 
-func AddUser(u User) string {
-	u.Id = "user_" + strconv.FormatInt(time.Now().UnixNano(), 10)
-	UserList[u.Id] = &u
-	return u.Id
+type UserInfo struct {
+	Id       	int64 `json:"id"`
+	Username   	string `json:"username"`
 }
 
-func GetUser(uid string) (u *User, err error) {
-	if u, ok := UserList[uid]; ok {
-		return u, nil
+
+
+func Register(User *User) (*User, error) {
+	_, err := db.Insert(User)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("User not exists")
+
+	return User, nil
 }
 
-func GetAllUsers() map[string]*User {
-	return UserList
-}
-
-func UpdateUser(uid string, uu *User) (a *User, err error) {
-	if u, ok := UserList[uid]; ok {
-		if uu.Username != "" {
-			u.Username = uu.Username
-		}
-		if uu.Password != "" {
-			u.Password = uu.Password
-		}
-		if uu.Profile.Age != 0 {
-			u.Profile.Age = uu.Profile.Age
-		}
-		if uu.Profile.Address != "" {
-			u.Profile.Address = uu.Profile.Address
-		}
-		if uu.Profile.Gender != "" {
-			u.Profile.Gender = uu.Profile.Gender
-		}
-		if uu.Profile.Email != "" {
-			u.Profile.Email = uu.Profile.Email
-		}
-		return u, nil
+func Login(user *User) (*TokenInfo, error) {
+	var TokenInfo *TokenInfo
+	err := db.Raw("SELECT id,username FROM user WHERE username = ? AND password = ?", user.Username, user.Password).QueryRow(&TokenInfo)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("User Not Exist")
+
+	return TokenInfo, nil
 }
 
-func Login(username, password string) bool {
-	for _, u := range UserList {
-		if u.Username == username && u.Password == password {
-			return true
-		}
+func GetUserInfo(user *User) (*UserInfo, error) {
+	var userInfo *UserInfo
+	err := db.Raw("SELECT id,username FROM user WHERE id = ? AND username = ?", user.Id, user.Username).QueryRow(&userInfo)
+	if err != nil {
+		return nil, err
 	}
-	return false
+
+	return userInfo, nil
 }
 
-func DeleteUser(uid string) {
-	delete(UserList, uid)
-}
