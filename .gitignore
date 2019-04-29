@@ -1,0 +1,4 @@
+.idea
+beego-api*
+*.tmp
+routers/commentsRouter_controllers.go
