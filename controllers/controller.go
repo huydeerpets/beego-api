@@ -3,7 +3,7 @@ package controllers
 const paramError = 10000
 const registerError = 10001
 const loginError = 10002
-const checkError = 10003
+const CheckError = 10003
 const tokenError = 10004
 const encryptError = 10005
 const decryptError = 10006
