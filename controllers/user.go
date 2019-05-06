@@ -19,7 +19,14 @@ type UserController struct {
 // @router / [get]
 func (u *UserController) Info() {
 	token := u.Ctx.Input.Header("Authorization")
-	_, t := service.CheckToken(token)
+	err, t := service.CheckToken(token)
+	if err != nil {
+		u.Data["json"] = &RespError{
+			Code: checkError,
+			Msg:  err.Error(),
+		}
+		u.ServeJSON()
+	}
 	claims, _ := t.Claims.(jwt.MapClaims)
 
 	usersJson, err := service.AesDecrypt(claims["sign"].(string))

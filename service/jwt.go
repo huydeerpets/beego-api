@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/astaxie/beego"
 	"github.com/dgrijalva/jwt-go"
 	"strings"
@@ -34,10 +35,10 @@ func GenToken(encryptData interface{}) (string, error) {
 	return tokenString, nil
 }
 
-func CheckToken(token string) (b bool, t *jwt.Token) {
+func CheckToken(token string) (b error, t *jwt.Token) {
 	kv := strings.Split(token, " ")
 	if len(kv) != 2 || kv[0] != "Bearer" {
-		return false, nil
+		return errors.New("format error"), nil
 	}
 
 	t, err := jwt.Parse(kv[1], func(*jwt.Token) (interface{}, error) {
@@ -45,8 +46,8 @@ func CheckToken(token string) (b bool, t *jwt.Token) {
 	})
 
 	if err != nil {
-		return false, nil
+		return err, nil
 	}
 
-	return true, t
+	return nil, t
 }

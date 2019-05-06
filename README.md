@@ -8,7 +8,7 @@ go get -v github.com/beego/bee
 go get -v github.com/dgrijalva/jwt-go
 go get -v github.com/go-sql-driver/mysql
 ```
-app.conf修改端口，bee run，访问http://192.168.20.188:8000/v1/user
+app.conf修改端口，bee run，访问http://192.168.20.188:8000/v1/user/
 
 ## 加密方案
 密码认证：先AES加再Md5
